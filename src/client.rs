@@ -7,6 +7,7 @@ use crate::{
     images::ImageData,
     types::{ChatMsg, GeminiResponse, SimpleTextMsg},
     Chat,
+    model::GeminiModel,
 };
 
 const BASE_URL_FORMAT: &str = "https://generativelanguage.googleapis.com/{VERSION}/";
@@ -33,8 +34,7 @@ impl JeminiClient {
 
     pub async fn text_only(&self, prompt: &str) -> Result<GeminiResponse, GeminiError> {
         //TODO: const these model options??
-        let url = self.base_url.join("models/gemini-pro:generateContent")?;
-
+        let url = self.base_url.join(GeminiModel::PRO)?;
         let contents = SimpleTextMsg::new_text_only(prompt);
         self.dispatch(url, contents).await
     }
@@ -65,7 +65,7 @@ impl JeminiClient {
         let url = self
             .base_url
             //TODO: const
-            .join("models/gemini-pro-vision:generateContent")?;
+            .join(GeminiModel::PRO_VISION)?;
         let contents = SimpleTextMsg::new_text_with_image(prompt, image_data);
 
         self.dispatch(url, contents).await
@@ -73,7 +73,7 @@ impl JeminiClient {
 
     pub async fn new_chat(&self, prompt: &str) -> Result<GeminiResponse, GeminiError> {
         //TODO: const these model options??
-        let url = self.base_url.join("models/gemini-pro:generateContent")?;
+        let url = self.base_url.join(GeminiModel::PRO)?;
         let (_chat, contents) = ChatMsg::new(prompt)?;
         let resp = self.dispatch(url, contents).await?;
 
@@ -85,7 +85,7 @@ impl JeminiClient {
     //TODO: if we have a Chat -- keep it in the Client.
     pub async fn reply_to(&self, chat: &mut Chat, reply: &str) -> Result<(), GeminiError> {
         //TODO: const these model options??
-        let url = self.base_url.join("models/gemini-pro:generateContent")?;
+        let url = self.base_url.join(GeminiModel::PRO)?;
 
         let (_, contents) = ChatMsg::new(reply)?;
         let resp = self.dispatch(url, contents).await?;
