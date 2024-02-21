@@ -33,7 +33,6 @@ impl JeminiClient {
     }
 
     pub async fn text_only(&self, prompt: &str) -> Result<GeminiResponse, GeminiError> {
-        //TODO: const these model options??
         let url = self.base_url.join(GeminiModel::PRO)?;
         let contents = SimpleTextMsg::new_text_only(prompt);
         self.dispatch(url, contents).await
@@ -56,7 +55,7 @@ impl JeminiClient {
             .await
             .map_err(GeminiError::from)
     }
-    /// Implements https://ai.google.dev/tutorials/rest_quickstart?hl=en#text-and-image_input
+    // Implements https://ai.google.dev/tutorials/rest_quickstart?hl=en#text-and-image_input
     pub async fn text_and_image(
         &self,
         prompt: &str,
@@ -64,7 +63,6 @@ impl JeminiClient {
     ) -> Result<GeminiResponse, GeminiError> {
         let url = self
             .base_url
-            //TODO: const
             .join(GeminiModel::PRO_VISION)?;
         let contents = SimpleTextMsg::new_text_with_image(prompt, image_data);
 
@@ -72,19 +70,14 @@ impl JeminiClient {
     }
 
     pub async fn new_chat(&self, prompt: &str) -> Result<GeminiResponse, GeminiError> {
-        //TODO: const these model options??
         let url = self.base_url.join(GeminiModel::PRO)?;
         let (_chat, contents) = ChatMsg::new(prompt)?;
         let resp = self.dispatch(url, contents).await?;
 
-        // TODO: flesh out the concept of a 'chat' should we keep them? where will they live?
-        // _chat.append(resp); // This is currently unused.
         Ok(resp)
     }
 
-    //TODO: if we have a Chat -- keep it in the Client.
     pub async fn reply_to(&self, chat: &mut Chat, reply: &str) -> Result<(), GeminiError> {
-        //TODO: const these model options??
         let url = self.base_url.join(GeminiModel::PRO)?;
 
         let (_, contents) = ChatMsg::new(reply)?;
@@ -132,6 +125,7 @@ mod tests {
             .unwrap();
 
         println!("{:#?}", chat);
+        // println!("{:#?}", response);
 
         client
             .reply_to(
