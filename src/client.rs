@@ -9,6 +9,7 @@ use crate::{
     Chat,
 };
 
+const BASE_URL_FORMAT: &str = "https://generativelanguage.googleapis.com/{VERSION}/";
 const VERSION: &str = "v1beta";
 
 pub struct JeminiClient {
@@ -21,10 +22,7 @@ impl JeminiClient {
     pub fn new() -> Result<Self, GeminiError> {
         Ok(Self {
             client: Client::new(),
-            base_url: Url::parse(&format!(
-                //TODO: Const
-                "https://generativelanguage.googleapis.com/{VERSION}/"
-            ))?,
+            base_url: Url::parse(&format!("{}{}", BASE_URL_FORMAT, VERSION))?,
             api_key: ApiKey::from_env()?,
         })
     }
