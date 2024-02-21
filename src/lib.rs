@@ -6,12 +6,14 @@ mod errors;
 mod images;
 mod response_utils;
 mod types;
+mod model;
 
 pub use chat::*;
 pub use client::JeminiClient;
 pub use errors::GeminiError;
 pub use images::ImageData;
 pub use types::GeminiResponse;
+pub use model::GeminiModel;
 
 impl GeminiResponse {
     pub fn most_recent(&self) -> Option<&str> {
